@@ -63,7 +63,7 @@ namespace LitBot
 					{
 						original[k].Children = GetTree(original, k + 1, i);
 					}
-					lines.Add(original[k]);
+					lines.Add(original[i]);
 					k = i;
 				}
 
