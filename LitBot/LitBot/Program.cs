@@ -11,7 +11,6 @@ namespace LitBot
 		static void Main(string[] args)
 		{
 			var lines = File.ReadAllLines(@"..\..\..\..\pizdec.txt").ToList();
-			var intend = 0;
 			List<FileLine> fileLines = new List<FileLine>();
 			for (int i = 0; i < lines.Count; i++)
 				if (!string.IsNullOrEmpty(lines[i]))
@@ -49,23 +48,26 @@ namespace LitBot
 					fileLines.Add(fileLine);
 				}
 
-			GetTree(fileLines, 0, fileLines.Count);
+			fileLines = GetTree(fileLines, 0, fileLines.Count);
 		}
 
-		private static List<Node> GetTree(List<FileLine> fileLines, int a, int b)
+		private static List<FileLine> GetTree(List<FileLine> original, int a, int b)
 		{
-			List<Node> nodes = new List<Node>();
+			List<FileLine> lines = new List<FileLine>();
 			int k = a;
-			for (int i = a + 1; i < b || fileLines[a].Indent > fileLines[i].Indent; i++)
-			{
-				if (fileLines[i].Type == FileLineType.Mark || fileLines[i].Type == FileLineType.Context || i == b - 1)
+			int i = a;
+			for (; i <= b; i++)
+				if (i == b || original[a].Indent == original[i].Indent)
 				{
-					GetTree(fileLines, k + 1, i);
+					if (i - k > 1)
+					{
+						original[k].Children = GetTree(original, k + 1, i);
+					}
+					lines.Add(original[k]);
 					k = i;
 				}
-			}
 
-			return nodes;
+			return lines;
 		}
 	}
 }
