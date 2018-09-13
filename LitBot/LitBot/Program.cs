@@ -48,23 +48,24 @@ namespace LitBot
 					fileLines.Add(fileLine);
 				}
 
-			fileLines = GetTree(fileLines, 0, fileLines.Count);
+			fileLines = GetTree(fileLines);
+		}
+
+		private static List<FileLine> GetTree(List<FileLine> fileLines)
+		{
+			return GetTree(fileLines, 0, fileLines.Count);
 		}
 
 		private static List<FileLine> GetTree(List<FileLine> original, int a, int b)
 		{
 			List<FileLine> lines = new List<FileLine>();
-			int k = a;
-			int i = a;
-			for (; i <= b; i++)
+			int elem = a;
+			for (int i = elem + 1; i <= b; i++)
 				if (i == b || original[a].Indent == original[i].Indent)
 				{
-					if (i - k > 1)
-					{
-						original[k].Children = GetTree(original, k + 1, i);
-					}
-					lines.Add(original[i]);
-					k = i;
+					original[elem].Children = GetTree(original, elem + 1, i);
+					lines.Add(original[elem]);
+					elem = i;
 				}
 
 			return lines;
